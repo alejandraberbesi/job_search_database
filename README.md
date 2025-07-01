@@ -1,67 +1,35 @@
-# 🌎 Remote Job Aggregator for LATAM Data Roles
+# 🌎 Remote Job Aggregator for LATAM Tech Roles
 
-This project builds a structured, queryable database of **remote job postings** in **data, AI, and machine learning**, with a focus on **LATAM-friendly** geographies and time zones.
+A modular data pipeline to collect, enrich, and store **remote job listings** in Data, AI, and Machine Learning — with a focus on **LATAM** and compatible remote time zones.
+
+![Python](https://img.shields.io/badge/Python-3.10+-blue?logo=python&logoColor=white)
+---
+
+## 🔭 Key Goals
+
+- **Multi-source ingestion**: Integrate APIs like Remotive, RemoteOK, WeWorkRemotely, etc.
+- **Fast NLP enrichment**: Extract key skills and tags from job descriptions
+- **SQLite storage**: Store all jobs in a persistent, queryable database (`jobs.db`)
+- **Automation**: Orchestrate with Apache Airflow for regular scraping
+- **Query-ready data**: Enable search via SQL tools
 
 ---
 
-## 🎯 Purpose
+## 🗂️ Core Components
 
-The goal is to create a modular, automated pipeline that continuously ingests job postings from multiple APIs, filters them for relevance, enriches the content (e.g., summaries, tags), and stores them in a persistent database.
-
-This dataset can be used for:
-- Market analysis and job trends
-- Dashboards and career intelligence tools
-- Alert systems and recommender models
-
----
-
-## 🧱 Architecture Overview
-
-- **Ingestion:** Fetch jobs from APIs (currently Remotive; more coming)
-- **Filtering:** Based on job titles and LATAM-compatible locations
-- **Enrichment:**
-  - HTML parsing
-  - Text summarization (NLP model under revision)
-- **Storage:**
-  - Intermediate: Pickle + human-readable `.txt`
-  - Final: Deduplicated SQLite database (`jobs.db`)
-- **Automation-ready:** Designed for future cron or cloud scheduling
+| File                | Purpose                                              |
+|---------------------|------------------------------------------------------|
+| `search_automation.py` | Fetches, filters, and enriches jobs from APIs     |
+| `filling_db.py`        | Deduplicates and inserts jobs into SQLite (`jobs.db`)  |
+| `jobs_scraped.pkl`     | Intermediate data store (serialized DataFrame)        |
+| `latest_jobs.txt`      | Human-readable summaries for inspection/debugging     |
+| `jobs.db`              | Persistent job listings database (SQLite)             |
 
 ---
 
-## 📦 Components
+🚧 Active Development
 
-| File              | Description                                         |
-|-------------------|-----------------------------------------------------|
-| `search_automation.py` | Ingests + filters + summarizes jobs from Remotive |
-| `filling_db.py`        | Inserts new, deduplicated records into SQLite DB  |
-| `jobs_scraped.pkl`     | Serialized DataFrame of current scraped jobs      |
-| `latest_jobs.txt`      | Text summary output for quick inspection          |
-| `jobs.db`              | Central job postings database (SQLite)            |
+This project is under continuous improvement — models, sources, and structure are evolving. Expect frequent updates as new APIs are added, NLP methods are refined, and automation tools are integrated.
 
----
 
-## 🔄 Roadmap
-
-- ✅ Core Remotive API pipeline
-- 🔁 Replace and improve summarization (LLM or custom heuristic)
-- ➕ Add new APIs (e.g. WeWorkRemotely, RemoteOK, Jobspresso)
-- 🧹 Add job deduplication across sources
-- 📤 Export options (CSV, JSON, GSheets)
-- 🕒 Schedule with cron or GitHub Actions
-- 📊 Create data dashboard (e.g., Streamlit, Superset)
-
----
-
-## 📌 Example Use Cases
-
-- **Data engineers** building automated job tracking systems
-- **Researchers** analyzing market demand for AI/data roles in emerging markets
-- **Job boards or newsletters** that need structured, fresh job feeds
-
----
-
-## ⚠️ Status
-
-> 🚧 In active development. Expect frequent changes as new APIs and features are integrated.
 

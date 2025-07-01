@@ -27,7 +27,7 @@ A modular data pipeline to collect, enrich, and store **remote job listings** in
 
 ---
 
-🚧 Active Development
+## 🚧 Active Development
 
 This project is under continuous improvement — models, sources, and structure are evolving. Expect frequent updates as new APIs are added, NLP methods are refined, and automation tools are integrated.
 

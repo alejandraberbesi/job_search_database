@@ -1,4 +1,4 @@
-# 🌎 Remote Job Aggregator for LATAM Tech Roles
+# Remote Job Aggregator for LATAM Tech Roles
 
 A modular data pipeline to collect, enrich, and store **remote job listings** in Data, AI, and Machine Learning — with a focus on **LATAM** and compatible remote time zones.
 

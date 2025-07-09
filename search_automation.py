@@ -1,13 +1,11 @@
 import requests
 import pandas as pd
 from datetime import datetime
-from transformers import pipeline
 import re
 from bs4 import BeautifulSoup
 
-# --- CONFIGURATION ---
-KEYWORDS_PATTERN = re.compile(r"\b(?:data|ai|machine learning)\b", re.IGNORECASE)
 
+# locations allowed
 LATAM_KEYWORDS = [
     "latam",
     "latin america",
@@ -21,29 +19,42 @@ LATAM_KEYWORDS = [
     "usa timezones",
     "americas",
 ]
+
 API_URL = "https://remotive.com/api/remote-jobs"
+
 SCRAPE_DATE = datetime.now().date()
-SUMMARY_MODEL = "facebook/bart-large-cnn"
-MAX_INPUT_TOKENS = 1024
 
-# --- INITIALIZE ---
-summarizer = pipeline("summarization", model=SUMMARY_MODEL)
-tokenizer = summarizer.tokenizer
+SKILLS = ["python", "sql", "machine learning", "data analytics"]
+
+EXPERIENCE_PATTERN = re.compile(r"(\d+)\+?\s+(?:years?|yrs?)\s+", re.IGNORECASE)
+
+INCLUDE_KEYWORDS = [
+    "data analytics",
+    "data analysis",
+    "data scientist",
+    "data science",
+    "machine learning engineer",
+]
+EXCLUDE_KEYWORDS = [
+    "head",
+    "manager",
+    "lead",
+    "director",
+    "intern",
+    "trainee",
+]
+
+INCLUDE_PATTERN = re.compile(
+    r"\b(?:%s)\b" % "|".join(map(re.escape, INCLUDE_KEYWORDS)), re.IGNORECASE
+)
+EXCLUDE_PATTERN = re.compile(
+    r"\b(?:%s)\b" % "|".join(map(re.escape, EXCLUDE_KEYWORDS)), re.IGNORECASE
+)
 
 
+# description needs preprocessing from html to normal text
 def html_to_text(html_content):
     return BeautifulSoup(html_content, "html.parser").get_text(separator="\n").strip()
-
-
-def safe_summarize(text, max_length=80, min_length=30):
-    try:
-        # Truncate text to ~1024 tokens worth (~4000 characters conservatively)
-        safe_text = text[:4000]
-        return summarizer(
-            safe_text, max_length=max_length, min_length=min_length, do_sample=False
-        )[0]["summary_text"]
-    except Exception as e:
-        return f"[SUMMARY ERROR] {type(e).__name__}: {str(e)}"
 
 
 # --- FETCH JOBS ---
@@ -59,7 +70,10 @@ except Exception as e:
 df_jobs = pd.DataFrame(jobs_data)
 
 # --- FILTER ---
-df_jobs = df_jobs[df_jobs["title"].str.contains(KEYWORDS_PATTERN, na=False)]
+df_jobs = df_jobs[
+    df_jobs["title"].str.contains(INCLUDE_PATTERN, na=False)
+    & ~df_jobs["title"].str.contains(EXCLUDE_PATTERN, na=False)
+]
 
 df_jobs = df_jobs[
     df_jobs["candidate_required_location"]
@@ -71,32 +85,41 @@ df_jobs["publication_date"] = pd.to_datetime(df_jobs["publication_date"])
 df_jobs["days_since_publication"] = (
     pd.Timestamp(SCRAPE_DATE) - df_jobs["publication_date"]
 ).dt.days
-
 df_jobs = df_jobs[df_jobs["days_since_publication"] <= 30]
 
 # --- PROCESS AND SUMMARIZE ---
 rows = []
 for _, row in df_jobs.iterrows():
     description = html_to_text(row.get("description", ""))
-    summary = safe_summarize(description)
+    description_lower = description.lower()
+
+    # Skill presence flags
+    skill_flags = {
+        f"{skill.replace(' ', '_')}": int(skill in description_lower)
+        for skill in SKILLS
+    }
+
+    # Years of experience (extract first match if any)
+    exp_match = EXPERIENCE_PATTERN.search(description_lower)
+    years_experience = int(exp_match.group(1)) if exp_match else None
 
     rows.append(
         {
             "title": row["title"],
             "company": row["company_name"],
             "url": row["url"],
+            "days_since_publication": row["days_since_publication"],
+            "years_experience": years_experience,
+            **skill_flags,
             "location": row.get("candidate_required_location", "").lower(),
             "publication_date": row["publication_date"].strftime("%d-%m-%Y"),
-            "days_since_publication": row["days_since_publication"],
             "date_added": SCRAPE_DATE.strftime("%d-%m-%Y"),
-            "description_summary": summary,
         }
     )
 
-# --- SAVE TO FILE ---
+# saving for manual inspection
 df_final = pd.DataFrame(rows)
-print(df_final.head())
-
 df_final.to_string("latest_jobs.txt", index=False)
 
+# saving for later passing to database
 df_final.to_pickle("jobs_scraped.pkl")

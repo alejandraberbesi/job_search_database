@@ -28,11 +28,15 @@ cursor.execute("""
         title TEXT,
         company TEXT,
         url TEXT,
+        days_since_publication INTEGER,
+        years_experience INTEGER,
+        python INTEGER,
+        sql INTEGER,
+        machine_learning INTEGER,
+        data_analytics INTEGER,
         location TEXT,
         publication_date TEXT,
-        days_since_publication INTEGER,
         date_added TEXT,
-        description_summary TEXT,
         UNIQUE(title, company, date_added)
     )
 """)

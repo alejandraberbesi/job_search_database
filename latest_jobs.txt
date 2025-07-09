@@ -1,3 +1,2 @@
-Empty DataFrame
-Columns: []
-Index: []
+         title company                                                          url  days_since_publication  years_experience  python  sql  machine_learning  data_analytics location publication_date date_added
+Data Scientist Zicasso https://remotive.com/remote-jobs/data/data-scientist-2023489                      18                 5       1    1                 1               0    latam       20-06-2025 09-07-2025

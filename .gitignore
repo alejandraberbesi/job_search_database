@@ -1,4 +1,4 @@
 notes.md
-jobs_scraped.pkl
+*.pkl
 jobs.db
 latest_jobs.txt

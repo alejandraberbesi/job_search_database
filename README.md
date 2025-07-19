@@ -20,10 +20,7 @@ A modular data pipeline to collect, enrich, and store **remote job listings** in
 | File                | Purpose                                              |
 |---------------------|------------------------------------------------------|
 | `search_automation.py` | Fetches, filters, and enriches jobs from APIs     |
-| `filling_db.py`        | Deduplicates and inserts jobs into SQLite (`jobs.db`)  |
-| `jobs_scraped.pkl`     | Intermediate data store (serialized DataFrame)        |
-| `latest_jobs.txt`      | Human-readable summaries for inspection/debugging     |
-| `jobs.db`              | Persistent job listings database (SQLite)             |
+| `filling_db.py`        | Deduplicates and inserts jobs into SQLite |
 
 ---
 

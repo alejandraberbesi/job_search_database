@@ -1,2 +1,0 @@
-                       title     company                                                                                url  days_since_publication  years_experience  python  sql  machine_learning  data_analytics  location publication_date date_added
-AI Machine Learning Engineer Constructor https://remotive.com/remote-jobs/software-dev/ai-machine-learning-engineer-2034159                       3                 4       1    1                 0               0 worldwide       15-07-2025 19-07-2025

@@ -7,9 +7,9 @@ A modular data pipeline to collect, enrich, and store **remote job listings** in
 
 ## 🔭 Key Goals
 
-- **Multi-source ingestion**: Integrate APIs like Remotive, RemoteOK, WeWorkRemotely, etc.
+- **Multi-source ingestion**: Integrate APIs like Remotive, RemoteOK, etc.
 - **Fast NLP enrichment**: Extract key skills and tags from job descriptions
-- **SQLite storage**: Store all jobs in a persistent, queryable database (`jobs.db`)
+- **SQLite storage**: Store all jobs in a persistent, queryable database
 - **Automation**: Orchestrate with Apache Airflow for regular scraping
 - **Query-ready data**: Enable search via SQL tools
 
@@ -20,16 +20,13 @@ A modular data pipeline to collect, enrich, and store **remote job listings** in
 | File                | Purpose                                              |
 |---------------------|------------------------------------------------------|
 | `search_automation.py` | Fetches, filters, and enriches jobs from APIs     |
-| `filling_db.py`        | Deduplicates and inserts jobs into SQLite (`jobs.db`)  |
-| `jobs_scraped.pkl`     | Intermediate data store (serialized DataFrame)        |
-| `latest_jobs.txt`      | Human-readable summaries for inspection/debugging     |
-| `jobs.db`              | Persistent job listings database (SQLite)             |
+| `filling_db.py`        | Deduplicates and inserts jobs into SQLite  |
 
 ---
 
 ## 🚧 Active Development
 
-This project is under continuous improvement — models, sources, and structure are evolving. Expect frequent updates as new APIs are added, NLP methods are refined, and automation tools are integrated.
+This project is under continuous improvement — models, sources, and structure are evolving. 
 
 
 
